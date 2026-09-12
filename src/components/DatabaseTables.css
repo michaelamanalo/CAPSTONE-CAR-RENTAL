@@ -1,0 +1,112 @@
+.database-tables {
+  margin-top: 28px;
+}
+
+.database-tables-heading,
+.database-table-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.database-tables-heading h3,
+.database-table-title h4 {
+  margin: 4px 0 0;
+  color: #1d2733;
+}
+
+.database-tables-heading button {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 4px;
+  background: #17624c;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.database-tables-heading button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.database-message,
+.database-empty {
+  font-size: 14px;
+}
+
+.database-message.success {
+  color: #17624c;
+}
+
+.database-message.error {
+  color: #b42318;
+}
+
+.database-empty {
+  color: #697586;
+}
+
+.database-table-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.database-table {
+  overflow: hidden;
+  border: 1px solid #d9dee5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.database-table-title {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e7eaee;
+}
+
+.database-table-title span {
+  color: #697586;
+  font-size: 13px;
+}
+
+.database-table .database-message,
+.database-table .database-empty {
+  margin: 16px;
+}
+
+.database-table-scroll {
+  overflow-x: auto;
+}
+
+.database-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.database-table th,
+.database-table td {
+  max-width: 280px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef0f2;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.database-table th {
+  background: #f7f8fa;
+  color: #344054;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .database-tables-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

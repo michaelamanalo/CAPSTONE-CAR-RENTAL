@@ -2,6 +2,26 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Supabase setup
+
+Set `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` to your actual Supabase project values in a local `.env.local` file, then restart the development server with `npm start`. Never place a service-role key in this React app.
+
+Because this project cannot use a valid browser anon key, database access runs through the local server proxy. Create a separate `.env.server` file in the project root with the actual values from the same Supabase project:
+
+```env
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SECRET_KEY=your_server_only_secret_key
+```
+
+Run the proxy and frontend in separate terminals:
+
+```text
+npm run server
+npm start
+```
+
+The secret key is read only by `server.js` and must never be placed in `.env.local` or committed to source control.
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -1,0 +1,2 @@
+REACT_APP_SUPABASE_URL=https://jvpqereqibagkqpcjnav.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=sb_publishable_j33Ke_Frl9RNJuTriGL6EA_gpxd2_OE
