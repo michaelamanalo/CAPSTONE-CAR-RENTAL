@@ -6,7 +6,7 @@ void main() {
 }
 
 class GFleetApp extends StatelessWidget {
-  const GFleetApp({Key? key}) : super(key: key);
+  const GFleetApp({super.key});
 
   @override
   Widget build(BuildContext context) {
