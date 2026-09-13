@@ -1,12 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders the dashboard and Supabase status', async () => {
+test('redirects to the login screen when there is no session', async () => {
   render(<App />);
-  expect(screen.getByRole('heading', { name: 'G-FLEET', level: 1 })).toBeInTheDocument();
-
-  await waitFor(() => {
-    expect(screen.getByText(/Supabase: error/i)).toBeInTheDocument();
-    expect(screen.getByText(/Database proxy is not running/i)).toBeInTheDocument();
-  });
+  expect(await screen.findByText('Admin Login')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
 });

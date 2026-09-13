@@ -1,0 +1,110 @@
+.bookings-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.bookings-tabs {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.bookings-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  color: var(--ink-muted);
+}
+
+.bookings-tab .mono {
+  font-size: var(--text-xs);
+  background: var(--surface-sunken);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+.bookings-tab--active {
+  background: var(--pine-700);
+  border-color: var(--pine-700);
+  color: #fff;
+}
+
+.bookings-tab--active .mono {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.bookings-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.bookings-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-weight: 600;
+  font-size: var(--text-xs);
+}
+
+.bookings-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.bookings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.bookings-vid {
+  color: var(--ink-muted);
+  font-size: var(--text-xs);
+  margin-left: var(--space-2);
+}
+
+.bookings-empty {
+  text-align: center;
+  color: var(--ink-muted);
+  padding: var(--space-6);
+}
+
+.bookings-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.bookings-approve,
+.bookings-decline {
+  border: none;
+  border-radius: var(--radius);
+  padding: 6px var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bookings-approve {
+  background: var(--pine-700);
+  color: #fff;
+}
+
+.bookings-decline {
+  background: var(--surface-sunken);
+  color: var(--ink-muted);
+}
