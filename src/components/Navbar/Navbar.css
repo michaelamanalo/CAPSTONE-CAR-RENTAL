@@ -1,0 +1,55 @@
+.navbar {
+  height: 60px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-5);
+}
+
+.navbar-title {
+  font-size: var(--text-lg);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.navbar-conn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.navbar-conn--connected .status-dot { background: var(--navy-700); }
+.navbar-conn--checking .status-dot { background: var(--gold); }
+.navbar-conn--error .status-dot,
+.navbar-conn--offline .status-dot { background: var(--red); }
+
+.navbar-user-email {
+  color: var(--ink-muted);
+  font-size: var(--text-xs);
+}
+
+.navbar-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-icon-btn:hover {
+  background: var(--surface-sunken);
+}

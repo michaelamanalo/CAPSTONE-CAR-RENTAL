@@ -1,0 +1,32 @@
+.logs-page {
+  max-width: 720px;
+}
+
+.logs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.logs-row {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-sm);
+}
+
+.logs-row:last-child {
+  border-bottom: none;
+}
+
+.logs-time {
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  width: 130px;
+}

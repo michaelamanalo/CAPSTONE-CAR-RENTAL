@@ -1,0 +1,34 @@
+.data-state {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  font-size: var(--text-sm);
+}
+
+.data-state--loading {
+  color: var(--ink-muted);
+}
+
+.data-state--error {
+  background: var(--red-100);
+  color: var(--red);
+  text-align: left;
+}
+
+.data-state--error p {
+  color: var(--ink-muted);
+  margin: 4px 0 0;
+}
+
+.data-state-hint code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.data-state--empty {
+  color: var(--ink-muted);
+  background: var(--surface-sunken);
+}
