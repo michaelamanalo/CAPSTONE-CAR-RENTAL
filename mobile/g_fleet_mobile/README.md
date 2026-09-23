@@ -26,3 +26,17 @@ Files added as placeholders:
 - lib/services/.gitkeep
 
 If you'd like, I can also stage, commit and push these files for you from here. Would you like me to run the git add/commit/push steps now?
+
+## Supabase
+
+The app reads its Supabase configuration from compile-time Dart defines. Do not
+put a service-role key in this app. Retrieve the project URL and anonymous key
+from the Supabase dashboard, then run:
+
+```powershell
+flutter run --dart-define=SUPABASE_URL=https://jvpqereqibagkqpcjnav.supabase.co --dart-define=SUPABASE_ANON_KEY=your-anon-key
+```
+
+When both defines are present, Supabase initializes before the app starts. A
+non-fatal debug connection test reads the authenticated Supabase REST root and
+logs its result; it does not change the app UI or query an application table.
