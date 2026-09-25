@@ -1,12 +1,16 @@
 :root {
-  /* Color */
-  --ink: #1b2430;
+  /* Color — sampled from the SGT mark */
+  --ink: #14181d;
   --ink-muted: #5b6674;
   --fog: #f5f6f4;
   --surface: #ffffff;
-  --route: #146450;
-  --route-dark: #0f4c3d;
-  --amber: #c97a2b;
+
+  --accent: #c23b32;       /* brand red, from the logo's red stripe */
+  --accent-dark: #8c2a24;  /* shadowed red, for hover/active states */
+  --gold: #c98a3e;         /* logo's amber underline */
+  --chrome: #d9dbdd;       /* brushed-silver highlight */
+
+  --amber: #c98a3e;
   --danger: #b42318;
   --hairline: #dce1e6;
   --hairline-soft: #eef0f2;

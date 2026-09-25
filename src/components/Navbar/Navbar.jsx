@@ -1,5 +1,5 @@
 import React from 'react';
-import sgtLogo from '../../assets/sgt-logo.png';
+import sgtLogo from '../../assets/brand/sgt-logo-transparent-web.png';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 

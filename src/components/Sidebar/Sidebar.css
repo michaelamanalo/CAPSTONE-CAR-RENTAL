@@ -36,7 +36,7 @@
 
 .sidebar-link.active {
   background: var(--fog);
-  color: var(--route-dark);
-  border-left-color: var(--route);
+  color: var(--accent-dark);
+  border-left-color: var(--accent);
   font-weight: 600;
 }

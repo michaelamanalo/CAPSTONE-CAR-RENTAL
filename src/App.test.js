@@ -7,8 +7,8 @@ test('shows the login screen first, then the dashboard after signing in', async 
 
   expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
 
-  await userEvent.type(screen.getByPlaceholderText('you@sgt.com'), 'admin@sgt.com');
-  await userEvent.type(screen.getByPlaceholderText('••••••••'), 'password');
+  await userEvent.type(screen.getByLabelText('Email'), 'admin@sgt.com');
+  await userEvent.type(screen.getByLabelText('Password'), 'password');
   await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
   expect(screen.getByRole('heading', { name: 'Dashboard', level: 1 })).toBeInTheDocument();

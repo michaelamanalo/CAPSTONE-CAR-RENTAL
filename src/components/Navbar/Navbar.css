@@ -5,7 +5,7 @@
   justify-content: space-between;
   padding: 0 var(--space-4);
   background: var(--ink);
-  border-bottom: 1px solid var(--route-dark);
+  border-bottom: 1px solid var(--accent-dark);
 }
 
 .navbar-mark {
@@ -16,15 +16,14 @@
 }
 
 .navbar-mark-glyph {
-  width: 34px;
-  height: 34px;
+  height: 26px;
+  width: auto;
   object-fit: contain;
-  border-radius: 4px;
 }
 
 .navbar-logout {
   padding: 7px 14px;
-  border: 1px solid var(--route-dark);
+  border: 1px solid var(--accent-dark);
   border-radius: var(--radius);
   background: transparent;
   color: #ffffff;
@@ -35,5 +34,5 @@
 }
 
 .navbar-logout:hover {
-  background: var(--route-dark);
+  background: var(--accent-dark);
 }

@@ -21,7 +21,7 @@
   padding: 8px 14px;
   border: 0;
   border-radius: 4px;
-  background: var(--route);
+  background: var(--accent);
   color: var(--surface);
   cursor: pointer;
   font: inherit;
@@ -39,7 +39,7 @@
 }
 
 .database-message.success {
-  color: var(--route);
+  color: var(--accent);
 }
 
 .database-message.error {
