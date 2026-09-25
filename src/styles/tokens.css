@@ -1,0 +1,38 @@
+:root {
+  /* Color — sampled from the SGT mark */
+  --ink: #14181d;
+  --ink-muted: #5b6674;
+  --fog: #f5f6f4;
+  --surface: #ffffff;
+
+  --accent: #c23b32;       /* brand red, from the logo's red stripe */
+  --accent-dark: #8c2a24;  /* shadowed red, for hover/active states */
+  --gold: #c98a3e;         /* logo's amber underline */
+  --chrome: #d9dbdd;       /* brushed-silver highlight */
+
+  --amber: #c98a3e;
+  --danger: #b42318;
+  --hairline: #dce1e6;
+  --hairline-soft: #eef0f2;
+
+  /* Type */
+  --font-ui: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-md: 17px;
+  --text-lg: 22px;
+  --text-xl: 28px;
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --navbar-height: 56px;
+  --radius: 6px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 32px;
+}

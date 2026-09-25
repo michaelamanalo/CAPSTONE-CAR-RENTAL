@@ -1,0 +1,38 @@
+.navbar {
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-4);
+  background: var(--ink);
+  border-bottom: 1px solid var(--accent-dark);
+}
+
+.navbar-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: #ffffff;
+}
+
+.navbar-mark-glyph {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
+}
+
+.navbar-logout {
+  padding: 7px 14px;
+  border: 1px solid var(--accent-dark);
+  border-radius: var(--radius);
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.navbar-logout:hover {
+  background: var(--accent-dark);
+}
