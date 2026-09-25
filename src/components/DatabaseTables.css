@@ -13,7 +13,7 @@
 .database-tables-heading h3,
 .database-table-title h4 {
   margin: 4px 0 0;
-  color: #1d2733;
+  color: var(--ink);
 }
 
 .database-tables-heading button {
@@ -21,8 +21,8 @@
   padding: 8px 14px;
   border: 0;
   border-radius: 4px;
-  background: #17624c;
-  color: #ffffff;
+  background: var(--route);
+  color: var(--surface);
   cursor: pointer;
   font: inherit;
   font-weight: 700;
@@ -39,15 +39,15 @@
 }
 
 .database-message.success {
-  color: #17624c;
+  color: var(--route);
 }
 
 .database-message.error {
-  color: #b42318;
+  color: var(--danger);
 }
 
 .database-empty {
-  color: #697586;
+  color: var(--ink-muted);
 }
 
 .database-table-list {
@@ -58,18 +58,18 @@
 
 .database-table {
   overflow: hidden;
-  border: 1px solid #d9dee5;
+  border: 1px solid var(--hairline);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--surface);
 }
 
 .database-table-title {
   padding: 14px 16px;
-  border-bottom: 1px solid #e7eaee;
+  border-bottom: 1px solid var(--hairline-soft);
 }
 
 .database-table-title span {
-  color: #697586;
+  color: var(--ink-muted);
   font-size: 13px;
 }
 
@@ -93,14 +93,14 @@
 .database-table td {
   max-width: 280px;
   padding: 10px 12px;
-  border-bottom: 1px solid #eef0f2;
+  border-bottom: 1px solid var(--hairline-soft);
   vertical-align: top;
   white-space: nowrap;
 }
 
 .database-table th {
-  background: #f7f8fa;
-  color: #344054;
+  background: var(--fog);
+  color: var(--ink);
   font-weight: 700;
 }
 
