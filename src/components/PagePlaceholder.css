@@ -1,0 +1,32 @@
+.placeholder-page {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-7);
+}
+
+.placeholder-card {
+  max-width: 460px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.placeholder-eyebrow {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-2);
+}
+
+.placeholder-title {
+  margin-bottom: var(--space-3);
+}
+
+.placeholder-description {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
