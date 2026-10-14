@@ -64,6 +64,10 @@ function accessResult(status, httpStatus, message, role) {
   return { status, httpStatus, message, role };
 }
 
+function escapeLikePattern(value) {
+  return value.replace(/[\\%_*]/g, '\\$&').replace(/"/g, '\\"');
+}
+
 async function verifyDashboardAccess(request) {
   const token = request.headers.authorization?.match(/^Bearer\s+(\S+)$/i)?.[1];
   if (!token) {
@@ -106,8 +110,8 @@ async function verifyDashboardAccess(request) {
 
   const profileQuery = new URLSearchParams({
     select: 'role',
-    email: `eq.${user.email.trim().toLowerCase()}`,
-    limit: '1',
+    email: `ilike."${escapeLikePattern(user.email.trim())}"`,
+    limit: '2',
   });
   let profileResponse;
   try {
@@ -129,7 +133,11 @@ async function verifyDashboardAccess(request) {
     return accessResult('error', 503, 'Dashboard access could not be verified.');
   }
 
-  const role = String(profiles?.[0]?.role || '').trim().toLowerCase();
+  if (!Array.isArray(profiles) || profiles.length !== 1) {
+    return accessResult('forbidden', 403, 'This account does not have dashboard access.');
+  }
+
+  const role = String(profiles[0]?.role || '').trim().toLowerCase();
   if (!allowedRoles.has(role)) {
     return accessResult('forbidden', 403, 'This account does not have dashboard access.');
   }

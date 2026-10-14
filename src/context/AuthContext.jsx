@@ -51,7 +51,7 @@ export function AuthProvider({ children }) {
       if (event === 'SIGNED_OUT') {
         checkSequence.current += 1;
         setStatus('signedOut');
-      } else if (event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+      } else if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
         queueMicrotask(() => {
           if (active) verifySession(session);
         });
