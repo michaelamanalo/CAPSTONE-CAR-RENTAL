@@ -41,11 +41,16 @@ function jsonResponse(response, status, body) {
 }
 
 function serviceHeaders(accept = 'application/json') {
-  return {
+  const headers = {
     Accept: accept,
     apikey: supabaseSecretKey,
-    Authorization: `Bearer ${supabaseSecretKey}`,
   };
+  // Current Supabase secret keys are API keys, not JWTs. Legacy service-role
+  // keys are JWTs and still need the Authorization header for PostgREST.
+  if (!supabaseSecretKey.startsWith('sb_secret_')) {
+    headers.Authorization = `Bearer ${supabaseSecretKey}`;
+  }
+  return headers;
 }
 
 function projectRows(rows, columns) {

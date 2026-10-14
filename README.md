@@ -1,90 +1,44 @@
-# Getting Started with Create React App
+# SGT Car Rentals Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React dashboard for SGT fleet, staff, alerts, and activity data. Dashboard access uses Supabase email/password authentication and is limited to accounts with an `admin` or `staff` role in the `USERS` table.
 
-## Supabase setup
+## Run locally
 
-Set `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY` to your actual Supabase project values in a local `.env.local` file, then restart the development server with `npm start`. Never place a service-role key in this React app.
+1. Install Node.js, then install the project dependencies:
 
-Because this project cannot use a valid browser anon key, database access runs through the local server proxy. Create a separate `.env.server` file in the project root with the actual values from the same Supabase project:
+   ```sh
+   npm ci
+   ```
 
-```env
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_SECRET_KEY=your_server_only_secret_key
+2. Copy the environment examples:
+
+   ```sh
+   cp .env.local.example .env.local
+   cp .env.server.example .env.server
+   ```
+
+   In PowerShell, use `Copy-Item` instead of `cp` if needed.
+
+3. In both files, set your Supabase project URL and publishable key (or legacy anon key). Put the server secret key (or legacy service-role key) only in `.env.server`. Keep the real `.env.*` files private and untracked.
+
+4. Create each staff account under **Supabase Dashboard → Authentication → Users**. Add a matching row in `USERS` with the same email and set `role` to `admin` or `staff`. Emails are matched without regard to letter case. There is no public signup flow.
+
+5. Start the proxy and web app in separate terminals from the project folder:
+
+   ```sh
+   npm run server
+   ```
+
+   ```sh
+   npm start
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000). The proxy listens on `127.0.0.1:4000` by default; `HOST` and `PORT` in `.env.server` can override those values.
+
+The server validates the Supabase session and staff role before returning dashboard data. It exposes read access to `VEHICLE`, `TELEMETRY_LOGS`, `BOOKINGS`, `EMERGENCY_ALERTS`, and `USERS`; the secret key never belongs in a `REACT_APP_*` variable.
+
+## Build
+
+```sh
+npm run build
 ```
-
-Run the proxy and frontend in separate terminals:
-
-```text
-npm run server
-npm start
-```
-
-The secret key is read only by `server.js` and must never be placed in `.env.local` or committed to source control.
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
