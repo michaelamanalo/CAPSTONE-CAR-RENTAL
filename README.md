@@ -21,7 +21,7 @@ React dashboard for SGT fleet, staff, alerts, and activity data. Dashboard acces
 
 3. In both files, set your Supabase project URL and publishable key (or legacy anon key). Put the server secret key (or legacy service-role key) only in `.env.server`. Keep the real `.env.*` files private and untracked.
 
-4. Create each staff account under **Supabase Dashboard → Authentication → Users**. Add a matching row in `USERS` with the same email and set `role` to `admin` or `staff`. Emails are matched without regard to letter case. There is no public signup flow.
+4. Create each staff account under **Supabase Dashboard → Authentication → Users**. Add a matching row in `USERS` with the email stored in lowercase and set `role` to `admin` or `staff`. There is no public signup flow.
 
 5. Start the proxy and web app in separate terminals from the project folder:
 

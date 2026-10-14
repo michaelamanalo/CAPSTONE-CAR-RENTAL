@@ -64,10 +64,6 @@ function accessResult(status, httpStatus, message, role) {
   return { status, httpStatus, message, role };
 }
 
-function escapeLikePattern(value) {
-  return value.replace(/[\\%_*]/g, '\\$&').replace(/"/g, '\\"');
-}
-
 async function verifyDashboardAccess(request) {
   const token = request.headers.authorization?.match(/^Bearer\s+(\S+)$/i)?.[1];
   if (!token) {
@@ -110,7 +106,7 @@ async function verifyDashboardAccess(request) {
 
   const profileQuery = new URLSearchParams({
     select: 'role',
-    email: `ilike."${escapeLikePattern(user.email.trim())}"`,
+    email: `eq.${user.email.trim().toLowerCase()}`,
     limit: '2',
   });
   let profileResponse;
