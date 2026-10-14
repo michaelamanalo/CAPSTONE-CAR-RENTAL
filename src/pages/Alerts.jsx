@@ -3,6 +3,7 @@ import { useTable } from '../hooks/useTable';
 import { normalizeAlert, normalizeVehicle } from '../services/normalize';
 import { TABLES } from '../services/tableNames';
 import DataState from '../components/DataState';
+import PageHeader from '../components/PageHeader';
 import './Alerts.css';
 
 const TYPE_LABEL = {
@@ -20,7 +21,14 @@ export default function Alerts() {
   const vehiclesQuery = useTable(TABLES.vehicles, normalizeVehicle);
   const [acked, setAcked] = useState({});
 
-  if (alertsQuery.status !== 'loaded') return <DataState status={alertsQuery.status} error={alertsQuery.error} />;
+  if (alertsQuery.status !== 'loaded') {
+    return (
+      <>
+        <PageHeader title="Notifications" description="Recent fleet alerts and their status." />
+        <DataState status={alertsQuery.status} error={alertsQuery.error} />
+      </>
+    );
+  }
 
   const items = alertsQuery.rows.map((a) => ({ ...a, acknowledged: a.acknowledged || Boolean(acked[a.id]) }));
   const vehicles = vehiclesQuery.status === 'loaded' ? vehiclesQuery.rows : [];
@@ -28,33 +36,44 @@ export default function Alerts() {
   const resolved = items.filter((a) => a.acknowledged);
 
   return (
-    <div className="alerts-page">
-      <section>
-        <h3 className="alerts-section-title">Needs attention ({open.length})</h3>
-        {open.length === 0 ? (
-          <p className="alerts-empty">No open alerts. The fleet is quiet right now.</p>
-        ) : (
-          <div className="alert-list">
-            {open.map((a) => (
-              <AlertCard key={a.id} alert={a} vehicles={vehicles} onAcknowledge={(id) => setAcked((prev) => ({ ...prev, [id]: true }))} />
-            ))}
-          </div>
-        )}
-      </section>
+    <>
+      <PageHeader title="Notifications" description="Recent fleet alerts and their status." />
+      {vehiclesQuery.status === 'error' && (
+        <p className="alerts-source-warning" role="status">
+          Vehicle details could not be loaded. Alerts are shown with vehicle IDs.
+        </p>
+      )}
+      <p className="alerts-local-note" role="note">
+        Acknowledge changes apply only until you leave this page.
+      </p>
+      <div className="alerts-page">
+        <section>
+          <h3 className="alerts-section-title">Needs attention ({open.length})</h3>
+          {open.length === 0 ? (
+            <p className="alerts-empty">No open alerts. The fleet is quiet right now.</p>
+          ) : (
+            <div className="alert-list">
+              {open.map((a) => (
+                <AlertCard key={a.id} alert={a} vehicles={vehicles} onAcknowledge={(id) => setAcked((prev) => ({ ...prev, [id]: true }))} />
+              ))}
+            </div>
+          )}
+        </section>
 
-      <section>
-        <h3 className="alerts-section-title">Resolved</h3>
-        {resolved.length === 0 ? (
-          <p className="alerts-empty">Nothing resolved yet.</p>
-        ) : (
-          <div className="alert-list alert-list--resolved">
-            {resolved.map((a) => (
-              <AlertCard key={a.id} alert={a} vehicles={vehicles} resolved />
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
+        <section>
+          <h3 className="alerts-section-title">Resolved</h3>
+          {resolved.length === 0 ? (
+            <p className="alerts-empty">Nothing resolved yet.</p>
+          ) : (
+            <div className="alert-list alert-list--resolved">
+              {resolved.map((a) => (
+                <AlertCard key={a.id} alert={a} vehicles={vehicles} resolved />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </>
   );
 }
 

@@ -1,15 +1,16 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../Sidebar/Sidebar';
 import './MainLayout.css';
 
-export default function MainLayout({ children }) {
+export default function MainLayout() {
   return (
     <div className="app-shell">
       <Navbar />
       <div className="app-body">
         <Sidebar />
-        <main className="app-content">{children}</main>
+        <main className="app-content"><Outlet /></main>
       </div>
     </div>
   );

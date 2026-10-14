@@ -1,5 +1,6 @@
 .app-shell {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
@@ -7,10 +8,30 @@
 .app-body {
   flex: 1;
   display: flex;
+  min-height: 0;
 }
 
 .app-content {
   flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
   padding: var(--space-5);
-  max-width: 1120px;
+}
+
+@media (max-width: 720px) {
+  .app-body {
+    flex-direction: column;
+  }
+
+  .app-content {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-content {
+    padding: 16px 12px 24px;
+  }
 }

@@ -41,26 +41,17 @@
 
 .staff-info {
   flex: 1;
+  min-width: 0;
 }
 
 .staff-name {
   font-weight: 600;
   font-size: var(--text-sm);
+  overflow-wrap: anywhere;
 }
 
 .staff-email {
   color: var(--ink-muted);
   font-size: var(--text-xs);
-}
-
-.staff-add {
-  align-self: flex-start;
-  background: var(--pine-700);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  cursor: pointer;
+  overflow-wrap: anywhere;
 }

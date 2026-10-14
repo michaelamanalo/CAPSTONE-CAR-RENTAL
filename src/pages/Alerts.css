@@ -5,6 +5,21 @@
   max-width: 760px;
 }
 
+.alerts-source-warning,
+.alerts-local-note {
+  max-width: 760px;
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.alerts-source-warning {
+  color: var(--danger);
+}
+
+.alerts-local-note {
+  color: var(--ink-muted);
+}
+
 .alerts-section-title {
   font-size: var(--text-sm);
   color: var(--ink-muted);
@@ -36,6 +51,11 @@
   box-shadow: var(--shadow-card);
 }
 
+.alert-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
 .alert-card--emergency,
 .alert-card--overspeeding {
   border-left-color: var(--rust);
@@ -52,14 +72,23 @@
 
 .alert-card-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 }
 
+.alert-card-head,
+.alert-card-message,
+.alert-card-meta {
+  overflow-wrap: anywhere;
+}
+
 .alert-card-id {
+  min-width: 0;
   font-size: var(--text-xs);
   color: var(--ink-muted);
+  overflow-wrap: anywhere;
 }
 
 .alert-card-time {
@@ -94,4 +123,14 @@
 
 .alert-card-action:hover {
   background: var(--pine-600);
+}
+
+@media (max-width: 600px) {
+  .alert-card {
+    flex-direction: column;
+  }
+
+  .alert-card-action {
+    align-self: flex-start;
+  }
 }

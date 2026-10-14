@@ -1,8 +1,9 @@
 .navbar {
-  height: var(--navbar-height);
+  min-height: var(--navbar-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-3);
   padding: 0 var(--space-4);
   background: var(--ink);
   border-bottom: 1px solid var(--accent-dark);
@@ -10,18 +11,28 @@
 
 .navbar-mark {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: var(--space-2);
   color: #ffffff;
 }
 
 .navbar-mark-glyph {
-  height: 26px;
+  height: 32px;
   width: auto;
   object-fit: contain;
 }
 
+.navbar-brand-name {
+  color: #ffffff;
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
 .navbar-logout {
+  flex-shrink: 0;
   padding: 7px 14px;
   border: 1px solid var(--accent-dark);
   border-radius: var(--radius);
@@ -35,4 +46,22 @@
 
 .navbar-logout:hover {
   background: var(--accent-dark);
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 12px;
+  }
+
+  .navbar-mark-glyph {
+    height: 28px;
+  }
+
+  .navbar-brand-name {
+    font-size: var(--text-sm);
+  }
+
+  .navbar-logout {
+    padding: 7px 10px;
+  }
 }

@@ -3,6 +3,7 @@ import { useTable } from '../hooks/useTable';
 import { normalizeAlert, normalizeBooking } from '../services/normalize';
 import { TABLES } from '../services/tableNames';
 import DataState from '../components/DataState';
+import PageHeader from '../components/PageHeader';
 import './ActivityLogs.css';
 
 // There's no dedicated activity-log table yet, so this page builds its
@@ -35,23 +36,45 @@ export default function ActivityLogs() {
     return [...bookingEntries, ...alertEntries].sort((a, b) => (a.time > b.time ? -1 : 1));
   }, [bookingsQuery.status, bookingsQuery.rows, alertsQuery.status, alertsQuery.rows]);
 
-  if (loading) return <DataState status="loading" />;
-  if (firstError && entries.length === 0) return <DataState status="error" error={firstError} />;
+  if (loading) {
+    return (
+      <>
+        <PageHeader title="Logs" description="Recent activity from bookings and fleet alerts." />
+        <DataState status="loading" />
+      </>
+    );
+  }
+  if (firstError && entries.length === 0) {
+    return (
+      <>
+        <PageHeader title="Logs" description="Recent activity from bookings and fleet alerts." />
+        <DataState status="error" error={firstError} />
+      </>
+    );
+  }
 
   return (
-    <div className="logs-page">
-      {entries.length === 0 ? (
-        <div className="data-state data-state--empty">No bookings or alerts recorded yet.</div>
-      ) : (
-        <ul className="logs-list">
-          {entries.map((e) => (
-            <li key={e.id} className="logs-row">
-              <span className="mono logs-time">{e.time}</span>
-              <span className="logs-text">{e.text}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <PageHeader title="Logs" description="Recent activity from bookings and fleet alerts." />
+      <div className="logs-page">
+        {firstError && (
+          <p className="logs-source-warning" role="status">
+            Some activity data could not be loaded: {firstError}
+          </p>
+        )}
+        {entries.length === 0 ? (
+          <div className="data-state data-state--empty">No bookings or alerts recorded yet.</div>
+        ) : (
+          <ul className="logs-list">
+            {entries.map((e) => (
+              <li key={e.id} className="logs-row">
+                <span className="mono logs-time">{e.time}</span>
+                <span className="logs-text">{e.text}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
