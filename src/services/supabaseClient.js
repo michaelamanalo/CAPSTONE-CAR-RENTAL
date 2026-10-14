@@ -14,7 +14,7 @@ export const isSupabaseConfigured = Boolean(
 export const supabaseConfigMessage = !supabaseUrl || !supabaseKey
   ? 'Set both Supabase environment variables in .env.local.'
   : isSecretKey
-    ? 'Secret keys cannot be used in a browser. Use a Supabase publishable key or legacy anon keyZ.'
+    ? 'Secret keys cannot be used in a browser. Use a Supabase publishable key or legacy anon key.'
   : hasPlaceholder
     ? 'Replace the placeholder Supabase values in .env.local with your project values.'
     : 'REACT_APP_SUPABASE_URL must be an HTTPS Supabase project URL.';

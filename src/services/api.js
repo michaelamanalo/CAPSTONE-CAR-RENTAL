@@ -1,3 +1,5 @@
+import { supabase } from './supabaseClient';
+
 export async function ping() {
   return requestJson('/api/health');
 }
@@ -13,12 +15,36 @@ export async function queryVehicles(column, value) {
   return requestJson(`/api/vehicle?${params.toString()}`);
 }
 
-async function requestJson(path) {
+export function verifyAccess(accessToken) {
+  return requestJson('/api/session', accessToken);
+}
+
+async function requestJson(path, suppliedToken) {
   try {
-    const response = await fetch(path);
+    let accessToken = suppliedToken;
+    if (accessToken === undefined && supabase) {
+      const { data } = await supabase.auth.getSession();
+      accessToken = data.session?.access_token;
+    }
+
+    const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+    const response = await fetch(path, { headers });
     const body = await response.json();
-    return response.ok ? body : { status: 'error', tables: [], message: body.message || `Request failed (${response.status}).` };
+    return response.ok
+      ? body
+      : {
+        ...body,
+        status: body.status || 'error',
+        tables: body.tables || [],
+        rows: body.rows || [],
+        message: body.message || `Request failed (${response.status}).`,
+      };
   } catch {
-    return { status: 'error', tables: [], message: 'Database proxy is not running. Start it with npm run server.' };
+    return {
+      status: 'error',
+      tables: [],
+      rows: [],
+      message: 'Database proxy is not running. Start it with npm run server.',
+    };
   }
 }

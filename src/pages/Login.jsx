@@ -4,14 +4,19 @@ import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { authError, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    login();
+    setFormError('');
+    setIsSubmitting(true);
+    const result = await login(email, password);
+    if (result?.error) setFormError(result.error);
+    setIsSubmitting(false);
   }
 
   return (
@@ -26,6 +31,10 @@ export default function Login() {
         <h1>Welcome back</h1>
         <p className="login-subtitle">Sign in to manage SGT's fleet, bookings, and staff.</p>
 
+        {(formError || authError) && (
+          <p className="login-error" role="alert">{formError || authError}</p>
+        )}
+
         <form onSubmit={handleSubmit}>
           <label className="login-field">
             Email
@@ -34,6 +43,7 @@ export default function Login() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="you@sgtcarrentals.com"
+              autoComplete="username"
               required
             />
           </label>
@@ -45,30 +55,18 @@ export default function Login() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
+              autoComplete="current-password"
               required
             />
           </label>
 
-          <div className="login-row">
-            <label className="login-remember">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(event) => setRemember(event.target.checked)}
-              />
-              Keep me signed in
-            </label>
-            <button type="button" className="login-forgot">
-              Forgot password?
-            </button>
-          </div>
-
-          <button type="submit" className="login-submit">
-            Sign in
+          <button type="submit" className="login-submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
 
         <p className="login-footnote">Restricted to authorized SGT admins and staff.</p>
+        <p className="login-help">Need access or password help? Contact your SGT administrator.</p>
       </div>
     </div>
   );

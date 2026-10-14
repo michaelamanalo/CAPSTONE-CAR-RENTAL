@@ -13,7 +13,13 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <main className="auth-loading" role="status" aria-live="polite">
+        Checking your SGT account…
+      </main>
+    );
+  }
   if (!isAuthenticated) return <Login />;
 
   return (
