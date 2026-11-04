@@ -7,10 +7,12 @@ import './MainLayout.css';
 export default function MainLayout() {
   return (
     <div className="app-shell">
-      <Navbar />
-      <div className="app-body">
-        <Sidebar />
-        <main className="app-content"><Outlet /></main>
+      <Sidebar />
+      <div className="main-content">
+        <Navbar />
+        <main className="app-content">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

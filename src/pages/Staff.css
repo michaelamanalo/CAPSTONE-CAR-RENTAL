@@ -1,57 +1,89 @@
 .staff-page {
-  max-width: 560px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 16px;
 }
 
 .staff-list {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
   overflow: hidden;
+  border: 1px solid #e5ebec;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(30, 47, 54, .045), 0 1px 2px rgba(30, 47, 54, .025);
 }
 
 .staff-row {
   display: flex;
+  min-width: 0;
+  min-height: 76px;
+  padding: 15px 17px;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border-bottom: 1px solid var(--line);
+  gap: 13px;
+  border-bottom: 1px solid #eff2f2;
 }
 
 .staff-row:last-child {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
 .staff-avatar {
-  width: 36px;
-  height: 36px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  place-items: center;
+  border: 1px solid #e7dfd2;
   border-radius: 50%;
-  background: var(--pine-100);
-  color: var(--pine-700);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #8a5b37;
+  background: #f8f1e8;
+  font-size: 11px;
   font-weight: 700;
-  font-size: var(--text-xs);
-  flex-shrink: 0;
 }
 
 .staff-info {
-  flex: 1;
   min-width: 0;
+  flex: 1;
 }
 
 .staff-name {
-  font-weight: 600;
-  font-size: var(--text-sm);
+  color: #2d3e44;
+  font-size: 13px;
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
 .staff-email {
-  color: var(--ink-muted);
-  font-size: var(--text-xs);
+  margin-top: 4px;
+  color: #718086;
+  font-size: 11px;
   overflow-wrap: anywhere;
+}
+
+.staff-row .pill {
+  display: inline-flex;
+  min-height: 25px;
+  padding: 4px 9px;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.staff-row .pill--alert {
+  color: #8b352e;
+  background: #fff0ee;
+}
+
+.staff-row .pill--active {
+  color: #35755e;
+  background: #eaf5f0;
+}
+
+@media (max-width: 480px) {
+  .staff-row {
+    align-items: flex-start;
+    padding: 13px;
+  }
 }

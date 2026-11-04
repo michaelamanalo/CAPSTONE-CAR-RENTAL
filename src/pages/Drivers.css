@@ -1,19 +1,20 @@
 .drivers-list {
-  max-width: 760px;
+  width: 100%;
   overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: var(--shadow-card);
+  border: 1px solid #e5ebec;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(30, 47, 54, .045), 0 1px 2px rgba(30, 47, 54, .025);
 }
 
 .drivers-row {
   display: flex;
   min-width: 0;
+  min-height: 78px;
+  padding: 15px 17px;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  border-bottom: 1px solid var(--line);
+  gap: 13px;
+  border-bottom: 1px solid #eff2f2;
 }
 
 .drivers-row:last-child {
@@ -22,14 +23,15 @@
 
 .drivers-avatar {
   display: grid;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   place-items: center;
+  border: 1px solid #dce9e2;
   border-radius: 50%;
-  background: var(--pine-100);
-  color: var(--pine-700);
-  font-size: var(--text-xs);
+  color: #35755e;
+  background: #eaf5f0;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -40,32 +42,32 @@
 
 .drivers-info h2 {
   margin: 0;
-  font-size: var(--text-sm);
-  font-weight: 600;
+  color: #2d3e44;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .drivers-info p {
+  margin: 4px 0 0;
+  color: #718086;
+  font-size: 11px;
   overflow-wrap: anywhere;
-  margin: 3px 0 0;
-  color: var(--ink-muted);
-  font-size: var(--text-xs);
 }
 
 .drivers-role {
   flex: 0 0 auto;
   padding: 5px 9px;
   border-radius: 999px;
-  background: var(--fog);
-  color: var(--ink-muted);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  text-transform: capitalize;
+  color: #35755e;
+  background: #eaf5f0;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 @media (max-width: 480px) {
   .drivers-row {
     align-items: flex-start;
-    padding: var(--space-3);
+    padding: 13px;
   }
 
   .drivers-role {

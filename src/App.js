@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/Layout/MainLayout';
 import ActivityLogs from './pages/ActivityLogs';
 import Alerts from './pages/Alerts';
+import Bookings from './pages/Bookings';
 import Dashboard from './pages/Dashboard';
 import Drivers from './pages/Drivers';
 import Login from './pages/Login';
@@ -27,6 +28,7 @@ function AppContent() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="vehicles" element={<ManageFleets />} />
+        <Route path="bookings" element={<Bookings />} />
         <Route path="drivers" element={<Drivers />} />
         <Route path="staff" element={<Staff />} />
         <Route path="notifications" element={<Alerts />} />

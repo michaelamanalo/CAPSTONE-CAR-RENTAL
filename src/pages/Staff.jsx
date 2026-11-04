@@ -12,7 +12,7 @@ export default function Staff() {
   if (status !== 'loaded') {
     return (
       <>
-        <PageHeader title="Manage Staff" description="Admin and staff accounts for the rental team." />
+        <PageHeader eyebrow="WORKSPACE" title="Manage Staff" description="Admin and staff accounts for the rental team." />
         <DataState status={status} error={error} />
       </>
     );
@@ -23,7 +23,7 @@ export default function Staff() {
 
   return (
     <>
-      <PageHeader title="Manage Staff" description="Admin and staff accounts for the rental team." />
+      <PageHeader eyebrow="WORKSPACE" title="Manage Staff" description="Admin and staff accounts for the rental team." />
       <div className="staff-page">
         {staff.length === 0 ? (
           <div className="data-state data-state--empty">No admin/staff accounts in the USERS table yet.</div>

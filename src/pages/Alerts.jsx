@@ -8,6 +8,7 @@ import './Alerts.css';
 
 const TYPE_LABEL = {
   emergency: 'Emergency',
+  speed: 'Overspeeding',
   overspeeding: 'Overspeeding',
   signal: 'Signal loss',
   geofence: 'Geofence breach',
@@ -24,7 +25,7 @@ export default function Alerts() {
   if (alertsQuery.status !== 'loaded') {
     return (
       <>
-        <PageHeader title="Notifications" description="Recent fleet alerts and their status." />
+        <PageHeader eyebrow="REQUIRES ACTION" title="Alerts" description="Recent fleet alerts and their status." />
         <DataState status={alertsQuery.status} error={alertsQuery.error} />
       </>
     );
@@ -37,7 +38,7 @@ export default function Alerts() {
 
   return (
     <>
-      <PageHeader title="Notifications" description="Recent fleet alerts and their status." />
+      <PageHeader eyebrow="REQUIRES ACTION" title="Alerts" description="Recent fleet alerts and their status." />
       {vehiclesQuery.status === 'error' && (
         <p className="alerts-source-warning" role="status">
           Vehicle details could not be loaded. Alerts are shown with vehicle IDs.
@@ -83,7 +84,7 @@ function AlertCard({ alert, vehicles, onAcknowledge, resolved }) {
     <article className={'alert-card alert-card--' + alert.type + (resolved ? ' alert-card--resolved' : '')}>
       <div className="alert-card-main">
         <div className="alert-card-head">
-          <span className={'pill pill--' + (alert.type === 'emergency' || alert.type === 'overspeeding' ? 'alert' : 'idle')}>
+          <span className={'pill pill--' + (alert.type === 'emergency' || alert.type === 'overspeeding' || alert.type === 'speed' ? 'alert' : 'idle')}>
             {TYPE_LABEL[alert.type] || alert.type}
           </span>
           <span className="mono alert-card-id">{alert.id}</span>
@@ -95,7 +96,7 @@ function AlertCard({ alert, vehicles, onAcknowledge, resolved }) {
         </p>
       </div>
       {!resolved && (
-        <button className="alert-card-action" onClick={() => onAcknowledge(alert.id)}>
+        <button className="alert-card-action" type="button" onClick={() => onAcknowledge(alert.id)}>
           Acknowledge
         </button>
       )}

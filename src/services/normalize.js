@@ -19,6 +19,7 @@ export function pick(row, candidates, fallback) {
 }
 
 export function numOrNull(value) {
+  if (value === null || value === undefined || (typeof value === 'string' && value.trim() === '')) return null;
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
 }

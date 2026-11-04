@@ -39,7 +39,7 @@ export default function ActivityLogs() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Logs" description="Recent activity from bookings and fleet alerts." />
+        <PageHeader eyebrow="ACTIVITY" title="Logs" description="Recent activity from bookings and fleet alerts." />
         <DataState status="loading" />
       </>
     );
@@ -47,7 +47,7 @@ export default function ActivityLogs() {
   if (firstError && entries.length === 0) {
     return (
       <>
-        <PageHeader title="Logs" description="Recent activity from bookings and fleet alerts." />
+        <PageHeader eyebrow="ACTIVITY" title="Logs" description="Recent activity from bookings and fleet alerts." />
         <DataState status="error" error={firstError} />
       </>
     );
@@ -55,7 +55,7 @@ export default function ActivityLogs() {
 
   return (
     <>
-      <PageHeader title="Logs" description="Recent activity from bookings and fleet alerts." />
+      <PageHeader eyebrow="ACTIVITY" title="Logs" description="Recent activity from bookings and fleet alerts." />
       <div className="logs-page">
         {firstError && (
           <p className="logs-source-warning" role="status">

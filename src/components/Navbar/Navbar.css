@@ -1,67 +1,94 @@
 .navbar {
-  min-height: var(--navbar-height);
+  position: sticky;
+  z-index: 4;
+  top: 0;
+  min-height: 57px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  padding: 0 var(--space-4);
-  background: var(--ink);
-  border-bottom: 1px solid var(--accent-dark);
+  gap: 16px;
+  padding: 0 34px;
+  border-bottom: 1px solid #e9eeee;
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(12px);
 }
 
-.navbar-mark {
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #8c999e;
+  font-size: 12px;
+}
+
+.breadcrumb strong {
+  color: #56646a;
+  font-weight: 600;
+}
+
+.navbar-actions {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: var(--space-2);
-  color: #ffffff;
+  gap: 14px;
 }
 
-.navbar-mark-glyph {
-  height: 32px;
-  width: auto;
-  object-fit: contain;
-}
-
-.navbar-brand-name {
-  color: #ffffff;
-  font-size: var(--text-md);
-  font-weight: 600;
-  letter-spacing: 0.01em;
+.current-date {
+  color: #69777d;
+  font-size: 11px;
   white-space: nowrap;
 }
 
-.navbar-logout {
+.navbar-bookings {
+  display: inline-flex;
+  min-height: 36px;
+  padding: 0 13px;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  padding: 7px 14px;
-  border: 1px solid var(--accent-dark);
-  border-radius: var(--radius);
-  background: transparent;
+  border: 1px solid #a8322b;
+  border-radius: 6px;
+  background: #c54137;
   color: #ffffff;
-  font: inherit;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  cursor: pointer;
+  box-shadow: 0 3px 7px rgba(197, 65, 55, .14);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.navbar-logout:hover {
-  background: var(--accent-dark);
+.navbar-bookings:hover {
+  background: #a8322b;
+}
+
+@media (max-width: 720px) {
+  .navbar {
+    padding-inline: 20px;
+  }
 }
 
 @media (max-width: 480px) {
   .navbar {
-    padding: 0 12px;
+    min-height: 52px;
+    gap: 8px;
+    padding-inline: 12px;
   }
 
-  .navbar-mark-glyph {
-    height: 28px;
+  .breadcrumb {
+    gap: 7px;
+    font-size: 11px;
   }
 
-  .navbar-brand-name {
-    font-size: var(--text-sm);
+  .navbar-actions {
+    gap: 8px;
   }
 
-  .navbar-logout {
-    padding: 7px 10px;
+  .current-date {
+    display: none;
+  }
+
+  .navbar-bookings {
+    min-height: 34px;
+    padding-inline: 10px;
+    font-size: 11px;
   }
 }

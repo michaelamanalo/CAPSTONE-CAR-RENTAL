@@ -1,55 +1,60 @@
 .logs-page {
-  max-width: 720px;
+  width: 100%;
 }
 
 .logs-source-warning {
-  margin: 0 0 var(--space-3);
-  color: var(--danger);
-  font-size: var(--text-sm);
+  margin: 0 0 13px;
+  padding: 11px 13px;
+  border: 1px solid #f1dcda;
+  border-radius: 7px;
+  color: #8b352e;
+  background: #fff8f6;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .logs-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
   overflow: hidden;
+  border: 1px solid #e5ebec;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(30, 47, 54, .045), 0 1px 2px rgba(30, 47, 54, .025);
 }
 
 .logs-row {
-  display: flex;
-  gap: var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--line);
-  font-size: var(--text-sm);
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(145px, 190px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 13px 17px;
+  border-bottom: 1px solid #eff2f2;
+  font-size: 12px;
 }
 
 .logs-row:last-child {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
 .logs-time {
-  color: var(--ink-muted);
-  flex-shrink: 0;
-  width: 130px;
+  color: #718086;
+  font-size: 11px;
   overflow-wrap: anywhere;
 }
 
 .logs-text {
   min-width: 0;
+  color: #34474d;
+  line-height: 1.45;
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .logs-row {
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .logs-time {
-    width: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    padding: 12px 14px;
   }
 }

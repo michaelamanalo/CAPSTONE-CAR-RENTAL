@@ -1,26 +1,26 @@
 .page-header {
-  margin-bottom: var(--space-4);
+  margin-bottom: 18px;
 }
 
 .page-header-eyebrow {
-  margin: 0 0 var(--space-1);
-  color: var(--accent-dark);
-  font-size: var(--text-xs);
+  margin: 0 0 6px;
+  color: #526268;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: .12em;
   text-transform: uppercase;
 }
 
 .page-header h1 {
   margin: 0;
-  color: var(--ink);
-  font-size: clamp(24px, 2.3vw, var(--text-xl));
-  line-height: 1.2;
+  color: #24343b;
+  font: 750 clamp(25px, 2.3vw, 28px)/1.2 'Manrope', 'DM Sans', 'Segoe UI', sans-serif;
+  letter-spacing: -.035em;
 }
 
 .page-header-description {
-  margin: var(--space-1) 0 0;
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-  line-height: 1.5;
+  margin: 6px 0 0;
+  color: #4d5d63;
+  font-size: 13px;
+  line-height: 1.45;
 }

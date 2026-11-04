@@ -1,20 +1,46 @@
 import React from 'react';
-import sgtLogo from '../../assets/brand/sgt-logo-transparent-web.png';
-import { useAuth } from '../../context/AuthContext';
+import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
+const PAGE_LABELS = {
+  '/': 'Overview',
+  '/vehicles': 'Fleet',
+  '/bookings': 'Bookings',
+  '/notifications': 'Alerts',
+  '/drivers': 'Drivers',
+  '/staff': 'Staff',
+  '/logs': 'Logs',
+};
+
 export default function Navbar() {
-  const { logout } = useAuth();
+  const { pathname } = useLocation();
+  const currentPath = pathname.replace(/\/+$/, '') || '/';
+  const pageLabel = PAGE_LABELS[currentPath] || 'Overview';
+  const now = new Date();
+  const today = new Intl.DateTimeFormat('en-PH', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'Asia/Manila',
+  }).format(now);
+  const dateTime = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone: 'Asia/Manila',
+  }).format(now);
 
   return (
     <header className="navbar">
-      <div className="navbar-mark">
-        <img className="navbar-mark-glyph" src={sgtLogo} alt="SGT Car Rentals logo" />
-        <span className="navbar-brand-name">SGT Car Rentals</span>
+      <nav className="breadcrumb" aria-label="Breadcrumb">
+        <span>Workspace</span>
+        <span aria-hidden="true">/</span>
+        <strong>{pageLabel}</strong>
+      </nav>
+      <div className="navbar-actions">
+        <time className="current-date" dateTime={dateTime}>{today}</time>
+        <Link className="navbar-bookings" to="/bookings">View bookings</Link>
       </div>
-      <button type="button" className="navbar-logout" onClick={logout}>
-        Log out
-      </button>
     </header>
   );
 }
