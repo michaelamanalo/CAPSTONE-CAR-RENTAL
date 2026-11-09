@@ -59,35 +59,41 @@ export function vehicleStatusMeta(rawStatus) {
 
 export function normalizeTelemetry(row) {
   return {
-    trackerDeviceId: pick(row, ['tracker_device_id', 'device_id'], null),
-    lat: numOrNull(pick(row, ['lat', 'latitude'], null)),
-    lng: numOrNull(pick(row, ['lng', 'longitude'], null)),
+    vehicleId: pick(row, ['vehicle_id'], null),
+    lat: numOrNull(pick(row, ['latitude'], null)),
+    lng: numOrNull(pick(row, ['longitude'], null)),
     speed: numOrNull(pick(row, ['speed'], 0)) ?? 0,
-    recordedAt: pick(row, ['recorded_at', 'timestamp', 'created_at'], null),
+    recordedAt: pick(row, ['timestamp'], null),
   };
 }
-
 export function normalizeBooking(row) {
+  const customerId = pick(row, ['customer_id'], null);
   return {
-    id: pick(row, ['id', 'booking_id'], '—'),
-    customer: pick(row, ['customer', 'customer_name', 'user_name'], 'Unknown customer'),
-    vehicleId: pick(row, ['vehicle_id', 'vehicleId'], '—'),
-    vehicle: pick(row, ['vehicle', 'vehicle_model'], ''),
-    start: pick(row, ['start', 'start_date', 'rental_start'], '—'),
-    end: pick(row, ['end', 'end_date', 'rental_end'], '—'),
-    status: pick(row, ['status'], 'pending'),
+    id: pick(row, ['booking_id'], '—'),
+    customerId,
+    customer: customerId ? `Customer ${customerId}` : 'Unknown customer',
+    vehicleId: pick(row, ['vehicle_id'], '—'),
+    vehicle: '',
+    start: pick(row, ['start_date'], '—'),
+    end: pick(row, ['end_date'], '—'),
+    totalAmount: numOrNull(pick(row, ['total_amount'], null)),
+    createdAt: pick(row, ['created_at'], null),
+    status: String(pick(row, ['booking_status'], 'Pending')).toLowerCase(),
   };
 }
-
 export function normalizeAlert(row) {
+  const latitude = numOrNull(pick(row, ['latitude'], null));
+  const longitude = numOrNull(pick(row, ['longitude'], null));
+  const status = String(pick(row, ['status'], '')).toLowerCase();
   return {
-    id: pick(row, ['id', 'alert_id'], '—'),
-    vehicleId: pick(row, ['vehicle_id', 'vehicleId'], '—'),
-    type: pick(row, ['type', 'alert_type'], 'geofence'),
-    message: pick(row, ['message', 'description'], 'No description provided.'),
-    time: pick(row, ['time', 'created_at', 'timestamp'], '—'),
-    location: pick(row, ['location', 'address'], '—'),
-    acknowledged: Boolean(pick(row, ['acknowledged', 'resolved'], false)),
+    id: pick(row, ['alert_id'], '—'),
+    vehicleId: pick(row, ['vehicle_id'], '—'),
+    type: String(pick(row, ['alert_type'], 'geofence')).toLowerCase(),
+    message: pick(row, ['description'], 'No description provided.'),
+    time: pick(row, ['timestamp'], '—'),
+    location: latitude !== null && longitude !== null ? `${latitude}, ${longitude}` : '—',
+    acknowledged: Boolean(pick(row, ['acknowledged_at', 'resolved_at'], null))
+      || ['acknowledged', 'resolved'].includes(status),
   };
 }
 

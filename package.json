@@ -24,6 +24,7 @@
     "server": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:server": "node --test server.test.cjs",
     "eject": "react-scripts eject"
   },
   "proxy": "http://127.0.0.1:4000",

@@ -3,6 +3,7 @@ import { verifyAccess } from '../services/api';
 import { isSupabaseConfigured, supabase, supabaseConfigMessage } from '../services/supabaseClient';
 
 const AuthContext = createContext(null);
+const DASHBOARD_ROLES = new Set(['admin', 'staff']);
 
 export function AuthProvider({ children }) {
   const [status, setStatus] = useState('checking');
@@ -20,16 +21,18 @@ export function AuthProvider({ children }) {
     const result = await verifyAccess(session.access_token);
     if (sequence !== checkSequence.current) return { ok: false, error: null };
 
-    if (result.status === 'authorized') {
+    if (result.status === 'authorized' && DASHBOARD_ROLES.has(result.role)) {
       setAuthError('');
       setStatus('authorized');
       return { ok: true, error: null };
     }
 
     setStatus('signedOut');
-    const message = result.message || 'Dashboard access could not be verified. Please try again.';
+    const message = result.status === 'authorized'
+      ? 'This account does not have access to the staff dashboard.'
+      : result.message || 'Dashboard access could not be verified. Please try again.';
     setAuthError(message);
-    if (result.status === 'unauthorized' || result.status === 'forbidden') {
+    if (result.status === 'unauthorized' || result.status === 'forbidden' || result.status === 'authorized') {
       try {
         await supabase?.auth.signOut();
       } catch {
@@ -47,7 +50,7 @@ export function AuthProvider({ children }) {
     }
 
     let active = true;
-    const subscription = supabase.auth.onAuthStateChange((event, session) => {
+    const authSubscription = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         checkSequence.current += 1;
         setStatus('signedOut');
@@ -56,9 +59,11 @@ export function AuthProvider({ children }) {
           if (active) verifySession(session);
         });
       }
-    }).data.subscription;
+    });
+    const subscription = authSubscription?.data?.subscription;
 
-    supabase.auth.getSession().then(({ data, error }) => {
+    Promise.resolve(supabase.auth.getSession()).then((sessionResult) => {
+      const { data, error } = sessionResult || {};
       if (!active) return;
       if (error) {
         setAuthError(error.message || 'Could not restore your Supabase session.');
@@ -75,7 +80,7 @@ export function AuthProvider({ children }) {
     return () => {
       active = false;
       checkSequence.current += 1;
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
   }, [verifySession]);
 
