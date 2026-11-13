@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/router/app_router.dart';
+import '../demo/demo_customer_session.dart';
 import 'auth_validators.dart';
 import 'widgets/auth_layout.dart';
 import 'widgets/password_field.dart';
@@ -17,6 +19,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) showBackendNotice(context);
+  }
+
+  Future<void> _continueAsDemo() async {
+    if (!kDebugMode) return;
+    FocusScope.of(context).unfocus();
+    final session = DemoCustomerSession.start();
+    try {
+      await Navigator.of(context).pushNamed(AppRouter.home, arguments: session);
+    } finally {
+      session.clear();
+    }
   }
 
   @override
@@ -46,6 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         FilledButton(onPressed: _submit, child: const Text('Login')),
+        if (kDebugMode)
+          OutlinedButton(
+            onPressed: _continueAsDemo,
+            child: const Text('Continue as Demo Customer'),
+          ),
         TextButton(
           onPressed: () =>
               Navigator.of(context).pushNamed(AppRouter.registration),

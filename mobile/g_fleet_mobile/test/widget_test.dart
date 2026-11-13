@@ -12,12 +12,12 @@ void main() {
       expect(find.text('Welcome to G-FLEET'), findsOneWidget);
       await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
       await tester.pumpAndSettle();
-      expect(find.text('Your journey starts here.'), findsOneWidget);
+      expect(find.text('Find your next ride'), findsOneWidget);
 
       await tester.pageBack();
       await tester.pumpAndSettle();
       expect(find.text('Welcome to G-FLEET'), findsOneWidget);
-      expect(find.text('Your journey starts here.'), findsNothing);
+      expect(find.text('Find your next ride'), findsNothing);
     },
   );
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:g_fleet_mobile/app/app.dart';
+import 'package:g_fleet_mobile/features/home/presentation/home_screen.dart';
 
 Finder field(String label) => find.widgetWithText(TextFormField, label);
 
@@ -221,7 +222,7 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.text('Your journey starts here.'), findsNothing);
+      expect(find.byType(HomeScreen), findsNothing);
       expect(find.text('Welcome to G-FLEET'), findsNothing);
     });
 

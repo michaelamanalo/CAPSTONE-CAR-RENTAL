@@ -52,7 +52,12 @@ class AuthLayout extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: AppTheme.brandPadding),
-                      Text('G-FLEET', style: theme.textTheme.titleLarge),
+                      Flexible(
+                        child: Text(
+                          'G-FLEET',
+                          style: theme.textTheme.titleLarge,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: AppTheme.sectionSpacing),

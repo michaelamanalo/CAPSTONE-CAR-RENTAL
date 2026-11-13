@@ -11,6 +11,7 @@ abstract final class AppTheme {
   static const controlRadius = 14.0;
   static const controlHeight = 52.0;
   static const formMaxWidth = 440.0;
+  static const dashboardMaxWidth = 720.0;
 
   static final light = _build(Brightness.light);
   static final dark = _build(Brightness.dark);
