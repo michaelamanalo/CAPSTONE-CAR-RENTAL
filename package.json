@@ -22,6 +22,7 @@
   "scripts": {
     "start": "react-scripts start",
     "server": "node server.js",
+    "prototype": "node prototype/serve.cjs",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:server": "node --test server.test.cjs",
