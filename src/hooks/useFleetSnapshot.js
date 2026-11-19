@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAlerts, getBookings, getFleetLocations, getVehicles } from '../services/api';
 import { normalizeAlert, normalizeBooking, normalizeTelemetry, normalizeVehicle } from '../services/normalize';
+import { DEMO_DATA_EVENT, isDemoMode } from '../services/demoMode';
 
 export function useFleetSnapshot() {
   const [snapshot, setSnapshot] = useState({
@@ -14,7 +15,7 @@ export function useFleetSnapshot() {
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([getVehicles(), getFleetLocations(), getBookings(), getAlerts()]).then(([
+    const load = () => Promise.all([getVehicles(), getFleetLocations(), getBookings(), getAlerts()]).then(([
       vehicleResult,
       locationResult,
       bookingResult,
@@ -47,8 +48,12 @@ export function useFleetSnapshot() {
       });
     });
 
+    load();
+    if (isDemoMode) window.addEventListener(DEMO_DATA_EVENT, load);
+
     return () => {
       cancelled = true;
+      if (isDemoMode) window.removeEventListener(DEMO_DATA_EVENT, load);
     };
   }, []);
 

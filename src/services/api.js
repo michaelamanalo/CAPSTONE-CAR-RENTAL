@@ -1,4 +1,10 @@
 import { supabase } from './supabaseClient';
+import { isDemoMode } from './demoMode';
+import { getDemoFleetLocations, getDemoRows } from './demoStore';
+
+function demoResult(tableName) {
+  return { success: true, data: getDemoRows(tableName) };
+}
 
 export async function ping() {
   return requestJson('/api/health', undefined, false);
@@ -13,26 +19,32 @@ export async function queryVehicles() {
 }
 
 export async function getVehicles() {
+  if (isDemoMode) return demoResult('VEHICLE');
   return requestJson('/api/vehicles');
 }
 
 export async function getBookings() {
+  if (isDemoMode) return demoResult('BOOKINGS');
   return requestJson('/api/bookings?limit=100');
 }
 
 export async function getFleetLocations() {
+  if (isDemoMode) return { success: true, data: getDemoFleetLocations() };
   return requestJson('/api/fleet/locations');
 }
 
 export async function getAlerts() {
+  if (isDemoMode) return demoResult('EMERGENCY_ALERTS');
   return requestJson('/api/alerts?limit=100');
 }
 
 export async function getStaff() {
+  if (isDemoMode) return demoResult('USERS');
   return requestJson('/api/staff');
 }
 
 export async function verifyAccess(accessToken) {
+  if (isDemoMode) return { status: 'authorized', role: 'admin' };
   const result = await requestJson('/api/session', accessToken);
   if (!result.success) {
     const status = result.error?.code === 'UNAUTHENTICATED' ? 'unauthorized' : result.error?.code === 'FORBIDDEN' ? 'forbidden' : 'error';

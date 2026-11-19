@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import DemoDeleteButton from '../components/DemoDeleteButton';
 import { useFleetSnapshot } from '../hooks/useFleetSnapshot';
 import { vehicleStatusMeta } from '../services/normalize';
+import { isDemoMode } from '../services/demoMode';
 import DataState from '../components/DataState';
 import PageHeader from '../components/PageHeader';
 import './ManageFleets.css';
@@ -108,14 +110,21 @@ export default function ManageFleets() {
             <div className="fleet-table-scroll">
               <table className="fleet-table">
                 <thead>
-                  <tr><th>VEHICLE</th><th>STATUS</th><th>LOCATION</th><th>LAST UPDATE</th></tr>
+                  <tr><th>VEHICLE</th><th>STATUS</th><th>LOCATION</th><th>LAST UPDATE</th>{isDemoMode && <th>ACTION</th>}</tr>
                 </thead>
                 <tbody>
                   {filteredVehicles.map((vehicle) => {
                     const statusMeta = vehicleStatusMeta(vehicle.status);
                     const selected = String(vehicle.id) === String(selectedVehicle?.id);
                     return (
-                      <tr className={selected ? 'fleet-row fleet-row--selected' : 'fleet-row'} key={vehicle.id} aria-selected={selected}>
+                      <tr
+                        className={selected ? 'fleet-row fleet-row--selected' : 'fleet-row'}
+                        key={vehicle.id}
+                        aria-selected={selected}
+                        onClick={(event) => {
+                          if (!event.target.closest('button, a, input, select, textarea')) setSelectedVehicleId(vehicle.id);
+                        }}
+                      >
                         <td>
                           <button
                             className="fleet-vehicle-select"
@@ -133,6 +142,7 @@ export default function ManageFleets() {
                         <td><span className={'fleet-status-pill fleet-status-pill--' + statusMeta.tone}>{statusMeta.label}</span></td>
                         <td>{locationFor(vehicle)}</td>
                         <td>{updateFor(vehicle.recordedAt)}</td>
+                        {isDemoMode && <td><DemoDeleteButton tableName="VEHICLE" id={vehicle.id} itemName={'vehicle ' + vehicle.id} /></td>}
                       </tr>
                     );
                   })}
@@ -158,7 +168,7 @@ export default function ManageFleets() {
               <p className="fleet-section-kicker">VEHICLE RECORD</p>
               <h2>Selected vehicle</h2>
             </div>
-            {selectedVehicle && <span className="fleet-detail-live"><i />LIVE DATA</span>}
+            {selectedVehicle && <span className="fleet-detail-live"><i />{isDemoMode ? 'DEMO DATA' : 'LIVE DATA'}</span>}
           </div>
           {selectedVehicle ? (
             <div className="fleet-detail-content">

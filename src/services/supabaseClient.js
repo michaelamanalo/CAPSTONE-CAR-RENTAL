@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { isDemoMode } from './demoMode';
 
 export const supabaseUrl = process.env.REACT_APP_SUPABASE_URL?.trim();
 export const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY?.trim();
@@ -19,6 +20,6 @@ export const supabaseConfigMessage = !supabaseUrl || !supabaseKey
     ? 'Replace the placeholder Supabase values in .env.local with your project values.'
     : 'REACT_APP_SUPABASE_URL must be an HTTPS Supabase project URL.';
 
-export const supabase = isSupabaseConfigured
+export const supabase = !isDemoMode && isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseKey)
   : null;

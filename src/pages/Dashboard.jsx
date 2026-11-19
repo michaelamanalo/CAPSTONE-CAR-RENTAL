@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useFleetSnapshot } from '../hooks/useFleetSnapshot';
+import { isDemoMode } from '../services/demoMode';
 import { vehicleStatusMeta } from '../services/normalize';
 import './Dashboard.css';
 
@@ -56,17 +57,13 @@ function CarIcon() {
   );
 }
 
-function SummaryCard({ label, value, tone, icon, foot, action, to }) {
+function SummaryCard({ label, value, tone, foot, to }) {
   return (
-    <article className={'dashboard-stat-card dashboard-stat-card--' + tone}>
-      <div className="dashboard-stat-top">
-        <span className="dashboard-stat-label">{label}</span>
-        <span className="dashboard-stat-icon" aria-hidden="true">{icon}</span>
-      </div>
+    <Link className={'dashboard-stat-card dashboard-stat-card--' + tone} to={to}>
+      <span className="dashboard-stat-label">{label}</span>
       <strong className="dashboard-stat-value">{value}</strong>
       <span className="dashboard-stat-foot">{foot}</span>
-      <Link className="dashboard-stat-action" to={to}>{action}</Link>
-    </article>
+    </Link>
   );
 }
 
@@ -90,6 +87,11 @@ export default function Dashboard() {
   const openAlertCount = dashboard.alerts
     ? dashboard.alerts.filter((alert) => !alert.acknowledged).length
     : '—';
+  const selectedVehicleBooking = dashboard.bookings
+    ?.filter((booking) => String(booking.vehicleId) === String(selectedVehicle?.id)
+      && ['active', 'pending'].includes(String(booking.status).toLowerCase()))
+    .sort((a, b) => (a.status === b.status ? new Date(a.start) - new Date(b.start) : a.status === 'active' ? -1 : 1))[0]
+    || null;
   const today = new Intl.DateTimeFormat('en-PH', {
     weekday: 'long',
     month: 'long',
@@ -97,13 +99,15 @@ export default function Dashboard() {
     year: 'numeric',
     timeZone: 'Asia/Manila',
   }).format(new Date());
-  const statusMessage = dashboard.status === 'loading'
-    ? 'Loading fleet data'
-    : dashboard.status === 'error'
-      ? 'Supabase unavailable'
-      : trackedVehicles.length
-        ? 'Fleet tracking active'
-        : 'Waiting for GPS data';
+  const statusMessage = isDemoMode
+    ? 'Local sample data'
+    : dashboard.status === 'loading'
+      ? 'Loading fleet data'
+      : dashboard.status === 'error'
+        ? 'Supabase unavailable'
+        : trackedVehicles.length
+          ? 'Fleet tracking active'
+          : 'Waiting for GPS data';
 
   function updateZoom(nextZoom) {
     setZoom(Math.max(0.8, Math.min(1.4, Math.round(nextZoom * 10) / 10)));
@@ -120,7 +124,7 @@ export default function Dashboard() {
         <div className={'dashboard-live-status dashboard-live-status--' + dashboard.status} role="status" aria-live="polite">
           <span className="dashboard-live-dot" aria-hidden="true" />
           <span>{statusMessage}</span>
-          {dashboard.status === 'loaded' && <span className="dashboard-live-source">Supabase</span>}
+          {dashboard.status === 'loaded' && <span className="dashboard-live-source">{isDemoMode ? 'LOCAL DEMO' : 'SUPABASE'}</span>}
         </div>
       </section>
       {dashboard.error && <p className="dashboard-error-message" role="alert">{dashboard.error}</p>}
@@ -137,7 +141,7 @@ export default function Dashboard() {
         <article className="dashboard-card dashboard-map-card" aria-labelledby="dashboard-map-title">
           <div className="dashboard-card-heading">
             <div>
-              <p className="dashboard-section-kicker">LIVE TRACKING</p>
+              <p className="dashboard-section-kicker">{isDemoMode ? 'DEMO TRACKING' : 'LIVE TRACKING'}</p>
               <h2 id="dashboard-map-title">Fleet locations</h2>
               <p className="dashboard-map-subtitle"><span className="dashboard-live-dot dashboard-live-dot--small" />Malaybalay City, Bukidnon</p>
             </div>
@@ -216,7 +220,7 @@ export default function Dashboard() {
                 })}
               </div>
             </div>
-            <span className="dashboard-map-attribution">Approximate positions from live GPS coordinates</span>
+            <span className="dashboard-map-attribution">{isDemoMode ? 'Sample vehicle positions' : 'Approximate positions from live GPS coordinates'}</span>
             {dashboard.status === 'loading' && <p className="dashboard-map-message">Loading vehicle locations…</p>}
             {dashboard.status === 'error' && <p className="dashboard-map-message">Connect to the database to load fleet locations.</p>}
             {dashboard.status === 'loaded' && trackedVehicles.length === 0 && (
@@ -237,7 +241,7 @@ export default function Dashboard() {
               <p className="dashboard-section-kicker">VEHICLE DETAILS</p>
               <h2 id="dashboard-detail-title">Selected vehicle</h2>
             </div>
-            {selectedVehicle && <span className="dashboard-detail-live"><i />LIVE DATA</span>}
+            {selectedVehicle && <span className="dashboard-detail-live"><i />{isDemoMode ? 'DEMO DATA' : 'LIVE DATA'}</span>}
           </div>
           {selectedVehicle ? (
             <div className="dashboard-vehicle-details">
@@ -258,6 +262,24 @@ export default function Dashboard() {
                 <div><span>Last GPS update</span><strong>{formatGpsUpdate(selectedVehicle.recordedAt)}</strong></div>
                 <div><span>Tracker device</span><strong>{selectedVehicle.trackerDeviceId || 'Not assigned'}</strong></div>
               </div>
+              <section className="dashboard-renter">
+                <div className="dashboard-renter-heading">
+                  <h3>{selectedVehicleBooking?.status === 'active' ? 'Current renter' : 'Rental assignment'}</h3>
+                  {selectedVehicleBooking && <span>{selectedVehicleBooking.status}</span>}
+                </div>
+                {selectedVehicleBooking ? (
+                  <>
+                    <strong className="dashboard-renter-name">{selectedVehicleBooking.customer}</strong>
+                    <dl>
+                      <div><dt>Booking</dt><dd>{selectedVehicleBooking.id}</dd></div>
+                      <div><dt>Phone</dt><dd>{selectedVehicleBooking.phone ? <a href={'tel:' + selectedVehicleBooking.phone}>{selectedVehicleBooking.phone}</a> : 'Not available'}</dd></div>
+                      <div><dt>Email</dt><dd>{selectedVehicleBooking.email ? <a href={'mailto:' + selectedVehicleBooking.email}>{selectedVehicleBooking.email}</a> : 'Not available'}</dd></div>
+                    </dl>
+                  </>
+                ) : (
+                  <p>No active or upcoming booking for this vehicle.</p>
+                )}
+              </section>
             </div>
           ) : (
             <div className="dashboard-detail-empty">

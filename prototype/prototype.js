@@ -60,6 +60,7 @@
     selectedVehicleId: 'GF-04',
     query: '',
     status: 'all',
+    logVehicleId: 'all',
     zoom: 1,
     showAlertHistory: false,
   });
@@ -67,6 +68,7 @@
   let state = makeInitialState();
   let toastTimer;
   let editingBookingId = null;
+  let renderedLogEntries = [];
 
   const byId = (id) => document.getElementById(id);
   const html = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
@@ -199,15 +201,58 @@
       const vehicle = vehicleFor(alert.vehicleId);
       const symbol = alert.type === 'emergency' ? '!' : alert.type === 'speed' ? '↗' : alert.type === 'signal' ? '⌁' : '⌖';
       const tone = alert.type === 'speed' ? ' alert-symbol--speed' : alert.type === 'signal' ? ' alert-symbol--signal' : '';
-      const action = alert.acknowledged
-        ? '<span class="alert-resolved">Acknowledged</span>'
-        : `<button class="alert-action" type="button" data-ack-alert="${html(alert.id)}" aria-label="Acknowledge ${html(alert.title)}">Acknowledge</button>`;
-      return `<div class="alert-row"><span class="alert-symbol${tone}" aria-hidden="true">${symbol}</span><div class="alert-copy"><strong class="alert-title">${html(alert.title)}</strong><span class="alert-description">${html(alert.message)}</span><span class="alert-meta"><b>${html(alert.vehicleId)}</b><span>·</span>${html(vehicle?.model || 'Unknown vehicle')}<span>·</span>${html(alertAge(alert.minutesAgo))}</span></div>${action}</div>`;
+      const resolved = alert.acknowledged ? '<span class="alert-history-status">Acknowledged</span>' : '';
+      return `<button class="alert-row alert-row--clickable" type="button" data-alert-id="${html(alert.id)}" aria-label="View details for ${html(alert.title)} on ${html(vehicle?.model || alert.vehicleId)}">
+        <span class="alert-symbol${tone}" aria-hidden="true">${symbol}</span>
+        <span class="alert-copy"><span class="alert-title">${html(alert.title)}</span><span class="alert-description">${html(alert.message)}</span><span class="alert-meta"><b>${html(alert.vehicleId)}</b><span>·</span>${html(vehicle?.model || 'Unknown vehicle')}<span>·</span>${html(alertAge(alert.minutesAgo))}${resolved}</span></span>
+        <span class="alert-open-label" aria-hidden="true">View details <span>›</span></span>
+      </button>`;
     }).join('') : '<div class="detail-empty"><strong>All clear</strong><span>No active fleet alerts right now.</span></div>';
-    byId('alertFooterText').textContent = state.showAlertHistory ? 'Alert history' : `${openAlerts} open ${openAlerts === 1 ? 'alert' : 'alerts'}`;
+    byId('alertFooterText').textContent = state.showAlertHistory ? 'Alert history' : `${openAlerts.length} open ${openAlerts.length === 1 ? 'alert' : 'alerts'}`;
     byId('toggleAlertHistory').textContent = state.showAlertHistory ? 'Active only' : 'View history';
     byId('toggleAlertHistory').setAttribute('aria-pressed', String(state.showAlertHistory));
-    byId('acknowledgeAll').hidden = openAlerts === 0 || state.showAlertHistory;
+    byId('acknowledgeAll').hidden = openAlerts.length === 0 || state.showAlertHistory;
+  }
+
+  function renderAlertDetails(alert) {
+    const vehicle = vehicleFor(alert.vehicleId);
+    const renter = state.bookings
+      .filter((booking) => booking.vehicleId === alert.vehicleId && ['active', 'pending'].includes(booking.status))
+      .sort((a, b) => (a.status === b.status ? new Date(a.start) - new Date(b.start) : a.status === 'active' ? -1 : 1))[0];
+    const location = vehicle?.location || alert.location || 'Location unavailable';
+    const recordedLocation = alert.location && alert.location !== location
+      ? `<div><dt>Alert location</dt><dd>${html(alert.location)}</dd></div>`
+      : '';
+    const phone = renter?.phone?.trim();
+    const email = renter?.email?.trim();
+    const renterDetails = renter
+      ? `<article class="record-card">
+          <div class="record-card-heading"><span class="record-card-icon">02</span><div><h3>Renter details</h3><p>${bookingStatusLabel(renter.status)} rental${renter.id ? ` · ${html(renter.id)}` : ''}</p></div></div>
+          <dl class="record-fields"><div><dt>Full name</dt><dd>${html(renter.customer)}</dd></div><div><dt>Phone number</dt><dd>${phone ? `<a href="tel:${html(phone.replace(/[^\d+]/g, ''))}">${html(phone)}</a>` : 'Not provided'}</dd></div><div><dt>Email address</dt><dd>${email ? `<a href="mailto:${html(email)}">${html(email)}</a>` : 'Not provided'}</dd></div></dl>
+          <div class="alert-contact-actions">${phone ? `<a class="button button--secondary" href="tel:${html(phone.replace(/[^\d+]/g, ''))}">Call renter</a>` : ''}${email ? `<a class="button button--secondary" href="mailto:${html(email)}">Email renter</a>` : ''}</div>
+        </article>`
+      : `<article class="record-card"><div class="record-card-heading"><span class="record-card-icon">02</span><div><h3>Renter details</h3><p>No active or upcoming booking</p></div></div><p class="alert-no-renter">There is no renter linked to this vehicle right now. Check the assigned driver and last known location below.</p></article>`;
+
+    byId('alertDetailTitle').textContent = alert.title;
+    byId('alertDetailSubtitle').textContent = `${alert.id} · ${formatBookingDate(alert.time, { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' })}`;
+    byId('alertDetailContent').innerHTML = `
+      <section class="booking-record-overview alert-record-overview">
+        <div><p class="section-kicker">${html(alert.vehicleId)} · ${html(vehicle?.model || 'Unknown vehicle')}</p><h3>${html(alert.message)}</h3><p>${html(vehicle?.plate || 'Vehicle details unavailable')}</p></div>
+        <span class="booking-record-status booking-record-status--${alert.acknowledged ? 'completed' : 'pending'}">${alert.acknowledged ? 'Acknowledged' : 'Needs attention'}</span>
+      </section>
+      <div class="alert-record-grid">
+        <article class="record-card">
+          <div class="record-card-heading"><span class="record-card-icon">01</span><div><h3>Vehicle location</h3><p>Latest tracking information</p></div></div>
+          <div class="alert-location-highlight"><span>LAST KNOWN LOCATION</span><strong>${html(location)}</strong><small>GPS update: ${html(vehicle?.updated || alertAge(alert.minutesAgo))}</small></div>
+          <dl class="record-fields"><div><dt>Vehicle status</dt><dd>${html(vehicle ? statusLabel(vehicle.status) : 'Unavailable')}</dd></div><div><dt>Assigned driver</dt><dd>${html(vehicle?.driver || 'Not assigned')}</dd></div>${recordedLocation}</dl>
+          <button class="text-button alert-map-link" type="button" data-view-alert-vehicle="${html(alert.vehicleId)}">Locate vehicle on fleet map</button>
+        </article>
+        ${renterDetails}
+      </div>`;
+    byId('alertDetailActions').innerHTML = alert.acknowledged
+      ? '<span class="alert-detail-status">This alert has already been acknowledged.</span>'
+      : `<button class="button button--primary" type="button" data-ack-alert="${html(alert.id)}">Acknowledge alert</button>`;
+    if (!byId('alertDetailDialog').open) byId('alertDetailDialog').showModal();
   }
 
   function formatBookingDate(value, options) {
@@ -271,18 +316,96 @@
   function renderLogs() {
     const bookingEntries = state.bookings.map((booking) => ({
       id: `booking-${booking.id}`,
+      vehicleId: booking.vehicleId,
       time: booking.start,
       text: `Booking ${booking.id} (${booking.customer}) — ${booking.status}`,
     }));
     const alertEntries = state.alerts.map((alert) => ({
       id: `alert-${alert.id}`,
+      vehicleId: alert.vehicleId,
       time: alert.time,
-      text: `${alert.vehicleId}: ${alert.message}`,
+      text: `${alert.title}: ${alert.message} - ${alert.acknowledged ? 'Acknowledged' : 'Open'}`,
     }));
     const entries = [...bookingEntries, ...alertEntries].sort((a, b) => new Date(b.time) - new Date(a.time));
-    byId('logList').innerHTML = entries.length ? entries.map((entry) => `
-      <li class="logs-row"><span class="mono logs-time">${html(entry.time)}</span><span class="logs-text">${html(entry.text)}</span></li>`).join('')
-      : '<li class="empty-state"><strong>No bookings or alerts recorded yet.</strong></li>';
+    renderedLogEntries = entries;
+    if (state.logVehicleId !== 'all' && !vehicleFor(state.logVehicleId)) state.logVehicleId = 'all';
+    byId('logVehicleFilter').innerHTML = '<option value="all">All car units</option>' + state.vehicles.map((vehicle) =>
+      `<option value="${html(vehicle.id)}">${html(vehicle.id)} - ${html(vehicle.model)}</option>`).join('');
+    byId('logVehicleFilter').value = state.logVehicleId;
+    const visibleEntries = state.logVehicleId === 'all'
+      ? entries
+      : entries.filter((entry) => entry.vehicleId === state.logVehicleId);
+    const vehicle = vehicleFor(state.logVehicleId);
+    const reportTitle = vehicle ? `${vehicle.model} (${vehicle.id})` : 'All car units';
+    byId('logSummary').textContent = state.logVehicleId === 'all'
+      ? `${visibleEntries.length} records across ${state.vehicles.length} car units`
+      : `${visibleEntries.length} records for ${reportTitle}`;
+    byId('logPrintTitle').textContent = vehicle ? `Vehicle log - ${reportTitle}` : 'Vehicle logs - All car units';
+    byId('logPrintSubtitle').textContent = vehicle
+      ? `Unit ${vehicle.id} | ${vehicle.plate} | Printed ${formatBookingDate(new Date().toISOString(), { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}`
+      : `All ${state.vehicles.length} car units | Printed ${formatBookingDate(new Date().toISOString(), { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}`;
+    byId('logPrintHeader').hidden = false;
+    byId('logList').innerHTML = visibleEntries.length ? visibleEntries.map((entry) => {
+      const entryVehicle = vehicleFor(entry.vehicleId);
+      const timestamp = formatBookingDate(entry.time, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+      return `<li class="logs-row" data-vehicle-id="${html(entry.vehicleId)}">
+        <time class="mono logs-time" datetime="${html(entry.time)}">${html(timestamp)}</time>
+        <span class="logs-unit"><strong>${html(entry.vehicleId)}</strong><span>${html(entryVehicle?.model || 'Vehicle unavailable')}</span></span>
+        <span class="logs-text">${html(entry.text)}</span>
+      </li>`;
+    }).join('') : '<li class="empty-state"><strong>No logs for this car unit yet.</strong></li>';
+    byId('downloadLogs').disabled = visibleEntries.length === 0;
+    byId('printLogs').disabled = visibleEntries.length === 0;
+  }
+
+  function downloadLogs() {
+    const vehicle = vehicleFor(state.logVehicleId);
+    const entries = state.logVehicleId === 'all'
+      ? renderedLogEntries
+      : renderedLogEntries.filter((entry) => entry.vehicleId === state.logVehicleId);
+    const reportTitle = vehicle ? `Vehicle log - ${vehicle.model} (${vehicle.id})` : 'Vehicle logs - All car units';
+    const printedAt = formatBookingDate(new Date().toISOString(), { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const rows = entries.map((entry) => {
+      const entryVehicle = vehicleFor(entry.vehicleId);
+      return [
+        formatBookingDate(entry.time, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }),
+        `${entry.vehicleId} - ${entryVehicle?.model || 'Vehicle unavailable'}`,
+        entry.text,
+      ];
+    });
+    const tableRows = rows.length
+      ? rows.map((row) => `<tr><td>${html(row[0])}</td><td>${html(row[1])}</td><td>${html(row[2])}</td></tr>`).join('')
+      : '<tr><td colspan="3">No log records for this car unit.</td></tr>';
+    const documentHtml = `<!doctype html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" lang="en">
+<head><meta charset="utf-8"><title>${html(reportTitle)}</title>
+<style>
+  body { font-family: Arial, sans-serif; color: #24343b; }
+  h1 { margin-bottom: 6px; font-size: 22px; }
+  .meta { margin: 0 0 20px; color: #53656b; font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #cbd4d4; padding: 9px 10px; text-align: left; vertical-align: top; }
+  th { color: #24343b; background: #eef3f1; font-size: 11px; text-transform: uppercase; }
+  td { font-size: 12px; line-height: 1.4; }
+  tr { page-break-inside: avoid; }
+</style></head>
+<body>
+  <h1>${html(reportTitle)}</h1>
+  <p class="meta">${vehicle ? `Unit ${html(vehicle.id)} | ${html(vehicle.plate)}` : `All ${state.vehicles.length} car units`} | Printed ${html(printedAt)}</p>
+  <table><thead><tr><th>Date &amp; time</th><th>Car unit</th><th>Activity</th></tr></thead><tbody>${tableRows}</tbody></table>
+</body></html>`;
+    const unitName = (vehicle?.id || 'all-units').toLowerCase().replace(/[^a-z0-9-]+/g, '-');
+    const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    const url = URL.createObjectURL(new Blob(['\uFEFF', documentHtml], { type: 'application/msword;charset=utf-8' }));
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = `sgt-car-logs-${unitName}-${date}.doc`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    byId('logExportMenu').open = false;
+    toast(`${entries.length} log records downloaded as a Word document.`);
   }
 
   function renderBookingDetails(booking) {
@@ -559,6 +682,15 @@
     state.status = event.target.value;
     renderAll();
   });
+  byId('logVehicleFilter').addEventListener('change', (event) => {
+    state.logVehicleId = event.target.value;
+    renderLogs();
+  });
+  byId('downloadLogs').addEventListener('click', downloadLogs);
+  byId('printLogs').addEventListener('click', () => {
+    byId('logExportMenu').open = false;
+    window.print();
+  });
   byId('clearVehicleFilters').addEventListener('click', () => {
     state.query = '';
     state.status = 'all';
@@ -585,14 +717,38 @@
   });
 
   byId('alertList').addEventListener('click', (event) => {
-    const button = event.target.closest('[data-ack-alert]');
-    if (!button) return;
-    const alert = state.alerts.find((item) => item.id === button.dataset.ackAlert);
-    if (alert) {
+    const row = event.target.closest('[data-alert-id]');
+    if (!row) return;
+    const alert = state.alerts.find((item) => item.id === row.dataset.alertId);
+    if (alert) renderAlertDetails(alert);
+  });
+  byId('alertDetailDialog').addEventListener('click', (event) => {
+    const acknowledgeButton = event.target.closest('[data-ack-alert]');
+    if (acknowledgeButton) {
+      const alert = state.alerts.find((item) => item.id === acknowledgeButton.dataset.ackAlert);
+      if (!alert) return;
       alert.acknowledged = true;
+      byId('alertDetailDialog').close();
       renderAll();
       toast(`${alert.id} acknowledged.`);
+      return;
     }
+
+    const mapButton = event.target.closest('[data-view-alert-vehicle]');
+    if (mapButton) {
+      const vehicleId = mapButton.dataset.viewAlertVehicle;
+      state.query = '';
+      state.status = 'all';
+      byId('vehicleSearch').value = '';
+      byId('statusFilter').value = 'all';
+      byId('alertDetailDialog').close();
+      showPage('overview');
+      setSelected(vehicleId);
+    }
+  });
+  byId('closeAlertDetail').addEventListener('click', () => byId('alertDetailDialog').close());
+  byId('alertDetailDialog').addEventListener('click', (event) => {
+    if (event.target === byId('alertDetailDialog')) byId('alertDetailDialog').close();
   });
   byId('acknowledgeAll').addEventListener('click', () => {
     state.alerts.forEach((alert) => { alert.acknowledged = true; });
@@ -717,6 +873,37 @@
     renderAll();
     toast('Demo data reset to the original sample.');
   });
+  const appShell = document.querySelector('.app-shell');
+  const sidebarToggle = byId('toggleSidebar');
+  const mobileNavigation = window.matchMedia('(max-width: 650px)');
+  const updateSidebarToggle = () => {
+    if (mobileNavigation.matches) {
+      sidebarToggle.setAttribute('aria-label', 'Go to overview');
+      sidebarToggle.title = 'Go to overview';
+      sidebarToggle.removeAttribute('aria-expanded');
+      sidebarToggle.removeAttribute('aria-controls');
+      return;
+    }
+
+    const expanded = appShell.classList.contains('app-shell--sidebar-expanded');
+    const label = expanded ? 'Collapse' : 'Expand';
+    sidebarToggle.setAttribute('aria-expanded', String(expanded));
+    sidebarToggle.setAttribute('aria-controls', 'primaryNav');
+    sidebarToggle.setAttribute('aria-label', label + ' navigation');
+    sidebarToggle.title = label + ' navigation';
+  };
+  sidebarToggle.addEventListener('click', () => {
+    if (mobileNavigation.matches) {
+      if (window.location.hash === '#page=overview') showPage('overview');
+      else window.location.hash = '#page=overview';
+      return;
+    }
+
+    appShell.classList.toggle('app-shell--sidebar-expanded');
+    updateSidebarToggle();
+  });
+  mobileNavigation.addEventListener('change', updateSidebarToggle);
+  updateSidebarToggle();
 
   const pageDetails = {
     overview: {
@@ -740,7 +927,7 @@
     alerts: {
       label: 'Alerts',
       title: 'Alerts',
-      subtitle: 'Review active notifications and acknowledge alerts as they are handled.',
+      subtitle: 'Open an alert to view renter contact details and the vehicle’s last known location.',
       showLiveStatus: false,
     },
     drivers: {
@@ -758,7 +945,7 @@
     logs: {
       label: 'Logs',
       title: 'Logs',
-      subtitle: 'Recent activity from bookings and fleet alerts.',
+      subtitle: 'Select a car unit to review or print its booking and alert history.',
       showLiveStatus: false,
     },
   };

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { isDemoMode } from '../../services/demoMode';
+import { resetDemoData } from '../../services/demoStore';
 import './Navbar.css';
 
 const PAGE_LABELS = {
@@ -38,7 +40,12 @@ export default function Navbar() {
         <strong>{pageLabel}</strong>
       </nav>
       <div className="navbar-actions">
+        <span className={'navbar-live-badge' + (isDemoMode ? ' navbar-live-badge--demo' : '')}>
+          <i aria-hidden="true" />{isDemoMode ? 'DEMO DATA' : 'LIVE DATA'}
+        </span>
+        <span className="navbar-divider" aria-hidden="true" />
         <time className="current-date" dateTime={dateTime}>{today}</time>
+        {isDemoMode && <button className="navbar-demo-reset" type="button" onClick={resetDemoData}>Reset demo</button>}
         <Link className="navbar-bookings" to="/bookings">View bookings</Link>
       </div>
     </header>

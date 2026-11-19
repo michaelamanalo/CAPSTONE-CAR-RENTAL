@@ -68,10 +68,13 @@ export function normalizeTelemetry(row) {
 }
 export function normalizeBooking(row) {
   const customerId = pick(row, ['customer_id'], null);
+  const customerName = pick(row, ['customer_name', 'renter_name', 'full_name'], null);
   return {
     id: pick(row, ['booking_id'], '—'),
     customerId,
-    customer: customerId ? `Customer ${customerId}` : 'Unknown customer',
+    customer: customerName || (customerId ? `Customer ${customerId}` : 'Unknown customer'),
+    phone: pick(row, ['customer_phone', 'phone_number', 'phone'], ''),
+    email: pick(row, ['customer_email', 'email'], ''),
     vehicleId: pick(row, ['vehicle_id'], '—'),
     vehicle: '',
     start: pick(row, ['start_date'], '—'),
@@ -87,6 +90,7 @@ export function normalizeAlert(row) {
   const status = String(pick(row, ['status'], '')).toLowerCase();
   return {
     id: pick(row, ['alert_id'], '—'),
+    bookingId: pick(row, ['booking_id'], null),
     vehicleId: pick(row, ['vehicle_id'], '—'),
     type: String(pick(row, ['alert_type'], 'geofence')).toLowerCase(),
     message: pick(row, ['description'], 'No description provided.'),

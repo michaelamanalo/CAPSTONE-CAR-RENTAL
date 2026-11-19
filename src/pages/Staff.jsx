@@ -1,4 +1,5 @@
 import React from 'react';
+import DemoDeleteButton from '../components/DemoDeleteButton';
 import { useTable } from '../hooks/useTable';
 import { normalizeUser } from '../services/normalize';
 import { TABLES } from '../services/tableNames';
@@ -12,7 +13,7 @@ export default function Staff() {
   if (status !== 'loaded') {
     return (
       <>
-        <PageHeader eyebrow="WORKSPACE" title="Manage Staff" description="Admin and staff accounts for the rental team." />
+        <PageHeader title="Manage Staff" />
         <DataState status={status} error={error} />
       </>
     );
@@ -23,7 +24,7 @@ export default function Staff() {
 
   return (
     <>
-      <PageHeader eyebrow="WORKSPACE" title="Manage Staff" description="Admin and staff accounts for the rental team." />
+      <PageHeader title="Manage Staff" />
       <div className="staff-page">
         {staff.length === 0 ? (
           <div className="data-state data-state--empty">No admin/staff accounts in the USERS table yet.</div>
@@ -37,6 +38,7 @@ export default function Staff() {
                   <div className="staff-email mono">{s.email}</div>
                 </div>
                 <span className={'pill ' + (s.role === 'admin' ? 'pill--alert' : 'pill--active')}>{s.role}</span>
+                <DemoDeleteButton tableName="USERS" id={s.id} itemName={'staff account for ' + s.name} />
               </div>
             ))}
           </div>

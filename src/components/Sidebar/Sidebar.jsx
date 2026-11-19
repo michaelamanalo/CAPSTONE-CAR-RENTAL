@@ -28,28 +28,39 @@ const NAV_ITEMS = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ expanded, onToggle }) {
   const { logout } = useAuth();
 
   return (
     <aside className="sidebar">
-      <NavLink className="sidebar-brand" to="/" aria-label="SGT Car Rentals dashboard home">
-        <img src={sgtLogo} alt="" />
-        <span><strong>SGT</strong><small>CAR RENTALS</small></span>
-      </NavLink>
+      <div className="sidebar-header">
+        <button
+          className="sidebar-brand"
+          type="button"
+          onClick={onToggle}
+          aria-label={expanded ? 'Collapse navigation' : 'Expand navigation'}
+          aria-expanded={expanded}
+          aria-controls="primary-navigation"
+          title={expanded ? 'Collapse navigation' : 'Expand navigation'}
+        >
+          <img src={sgtLogo} alt="" />
+          <span className="sidebar-brand-wordmark"><strong>SGT</strong><small>CAR RENTALS</small></span>
+        </button>
+      </div>
 
       <p className="sidebar-label">WORKSPACE</p>
-      <nav className="sidebar-navigation" aria-label="Dashboard sections">
+      <nav className="sidebar-navigation" id="primary-navigation" aria-label="Dashboard sections">
         <ul className="sidebar-nav">
           {NAV_ITEMS.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
                 end={item.to === '/'}
+                title={item.label}
                 className={({ isActive }) => `sidebar-link${isActive ? ' sidebar-link--active' : ''}`}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">{item.icon}</svg>
-                <span>{item.label}</span>
+                <span className="sidebar-link-label">{item.label}</span>
               </NavLink>
             </li>
           ))}

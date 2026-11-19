@@ -1,0 +1,23 @@
+.demo-delete-button {
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid #f0d3d0;
+  border-radius: 6px;
+  color: #a43a33;
+  background: #fff8f7;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.demo-delete-button:hover {
+  border-color: #d8aaa5;
+  background: #fff0ee;
+}
+
+.demo-delete-button:focus-visible {
+  outline: 3px solid rgba(197, 65, 55, .25);
+  outline-offset: 2px;
+}

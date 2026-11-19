@@ -1,12 +1,13 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { verifyAccess } from '../services/api';
+import { isDemoMode } from '../services/demoMode';
 import { isSupabaseConfigured, supabase, supabaseConfigMessage } from '../services/supabaseClient';
 
 const AuthContext = createContext(null);
 const DASHBOARD_ROLES = new Set(['admin', 'staff']);
 
 export function AuthProvider({ children }) {
-  const [status, setStatus] = useState('checking');
+  const [status, setStatus] = useState(isDemoMode ? 'authorized' : 'checking');
   const [authError, setAuthError] = useState('');
   const checkSequence = useRef(0);
 
@@ -43,6 +44,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    if (isDemoMode) {
+      setAuthError('');
+      setStatus('authorized');
+      return undefined;
+    }
     if (!isSupabaseConfigured || !supabase) {
       setAuthError(supabaseConfigMessage);
       setStatus('signedOut');
@@ -86,6 +92,10 @@ export function AuthProvider({ children }) {
 
   async function login(email, password) {
     setAuthError('');
+    if (isDemoMode) {
+      setStatus('authorized');
+      return { error: null };
+    }
     if (!isSupabaseConfigured || !supabase) {
       const error = supabaseConfigMessage;
       setAuthError(error);
@@ -119,7 +129,7 @@ export function AuthProvider({ children }) {
     checkSequence.current += 1;
     setAuthError('');
     setStatus('signedOut');
-    if (supabase) {
+    if (!isDemoMode && supabase) {
       try {
         await supabase.auth.signOut();
       } catch {

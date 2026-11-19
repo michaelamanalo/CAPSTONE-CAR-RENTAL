@@ -1,4 +1,5 @@
 import React from 'react';
+import DemoDeleteButton from '../components/DemoDeleteButton';
 import DataState from '../components/DataState';
 import PageHeader from '../components/PageHeader';
 import { useTable } from '../hooks/useTable';
@@ -30,7 +31,7 @@ export default function Drivers() {
           {drivers.map((driver) => (
             <article className="drivers-row" key={driver.id}>
               <div className="drivers-avatar" aria-hidden="true">
-                {driver.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase()}
+                  {driver.name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase()}
               </div>
               <div className="drivers-info">
                 <h2>{driver.name}</h2>
@@ -38,6 +39,7 @@ export default function Drivers() {
                 <p>{driver.phone}</p>
               </div>
               <span className="drivers-role">Driver</span>
+              <DemoDeleteButton tableName="USERS" id={driver.id} itemName={'driver ' + driver.name} />
             </article>
           ))}
         </div>
